@@ -1,1 +1,0 @@
-{"version":3,"file":"pubmed.d.ts","sourceRoot":"","sources":["../../src/providers/pubmed.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,cAAc,EAAkB,eAAe,EAAE,mBAAmB,EAAE,MAAM,aAAa,CAAA;AA+BvG,wBAAgB,oBAAoB,CAAC,KAAK,EAAE,mBAAmB,GAAG,MAAM,CAIvE;AAED,wBAAsB,YAAY,CAAC,KAAK,EAAE,mBAAmB,GAAG,OAAO,CAAC,cAAc,EAAE,CAAC,CAOxF;AAeD,eAAO,MAAM,cAAc,EAAE,eAW5B,CAAA"}

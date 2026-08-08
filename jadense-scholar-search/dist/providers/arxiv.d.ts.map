@@ -1,1 +1,0 @@
-{"version":3,"file":"arxiv.d.ts","sourceRoot":"","sources":["../../src/providers/arxiv.ts"],"names":[],"mappings":"AAEA,OAAO,KAAK,EAAE,cAAc,EAAE,eAAe,EAAE,mBAAmB,EAAE,MAAM,aAAa,CAAA;AAwCvF,wBAAgB,mBAAmB,CAAC,KAAK,EAAE,mBAAmB,GAAG,MAAM,CAStE;AAED,wBAAsB,WAAW,CAAC,KAAK,EAAE,mBAAmB,GAAG,OAAO,CAAC,cAAc,EAAE,CAAC,CAMvF;AAED,eAAO,MAAM,aAAa,EAAE,eAAkR,CAAA"}

@@ -1,1 +1,0 @@
-{"version":3,"file":"crossref.d.ts","sourceRoot":"","sources":["../../src/providers/crossref.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,cAAc,EAAE,eAAe,EAAE,mBAAmB,EAAE,MAAM,aAAa,CAAA;AA4CvF,wBAAgB,sBAAsB,CAAC,KAAK,EAAE,mBAAmB,GAAG,MAAM,CAEzE;AAED,wBAAsB,cAAc,CAAC,KAAK,EAAE,mBAAmB,GAAG,OAAO,CAAC,cAAc,EAAE,CAAC,CAS1F;AAED,eAAO,MAAM,gBAAgB,EAAE,eAS9B,CAAA"}
