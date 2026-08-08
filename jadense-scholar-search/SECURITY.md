@@ -14,3 +14,7 @@ Report suspected credential exposure or a security issue privately to the projec
 ## Third-party APIs
 
 Respect each provider's terms, rate limits, robots policies, and attribution requirements. Keep live tests disabled by default and use small, explicit fixtures for parser tests.
+
+## Abstract enrichment
+
+`--enrich` / `enrich: true` appends one OpenAlex public request per selected result that lacks an abstract. OpenAlex is a public, key-free API, so no new credential is added. Enrichment failures are isolated: they are recorded as `stage: "enrich"` diagnostics using stable provider messages and never expose request URLs or internal details, and they never discard successful search results.

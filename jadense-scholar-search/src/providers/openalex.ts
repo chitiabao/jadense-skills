@@ -1,4 +1,4 @@
-import { compactMetadata, normalizeAuthors, normalizeDoi, normalizeExternalId, normalizeText, normalizeUrl, toFiniteNumber, toIntegerOrNull } from "../normalize.js"
+import { compactMetadata, normalizeAuthors, normalizeDoi, normalizeExternalId, normalizeText, normalizeTitle, normalizeUrl, toFiniteNumber, toIntegerOrNull } from "../normalize.js"
 import type { PaperCandidate, PaperReference, ProviderAdapter, ProviderSearchInput } from "../types.js"
 import { record, requestJson } from "./common.js"
 
@@ -6,7 +6,7 @@ const OPENALEX_URL = "https://api.openalex.org"
 const OFFLINE_WORKS: Record<string, Record<string, unknown>> = {
   circuits: { id: "https://openalex.org/W4317823110", display_name: "A Mathematical Framework for Transformer Circuits", publication_year: 2023, publication_date: null, cited_by_count: 2400, primary_location: { source: { display_name: "arXiv" } }, authorships: [{ author: { display_name: "Nelson Elhage" } }, { author: { display_name: "Tom McGrath" } }] },
   attention: { id: "https://openalex.org/W2741809807", doi: "https://doi.org/10.48550/arXiv.1706.03762", display_name: "Attention Is All You Need", publication_year: 2017, publication_date: "2017-06-12", cited_by_count: 150000, primary_location: { landing_page_url: "https://arxiv.org/abs/1706.03762", source: { display_name: "NeurIPS" } }, authorships: [{ author: { display_name: "Ashish Vaswani" } }, { author: { display_name: "Noam Shazeer" } }] },
-  interpretability: { id: "https://openalex.org/W4391101111", doi: "https://doi.org/10.5555/llm.2024.001", display_name: "Interpretability in Large Language Models", publication_year: 2024, publication_date: "2024-04-15", cited_by_count: 120, primary_location: { landing_page_url: "https://example.org/llm-interpretability", source: { display_name: "Transactions on Machine Learning Research" } }, authorships: [{ author: { display_name: "Ada Researcher" } }] },
+  interpretability: { id: "https://openalex.org/W4391101111", doi: "https://doi.org/10.5555/llm.2024.001", display_name: "Interpretability in Large Language Models", publication_year: 2024, publication_date: "2024-04-15", cited_by_count: 120, abstract_inverted_index: { We: [0], study: [1], interpretability: [2], of: [3], large: [4], language: [5], models: [6], ".": [7] }, primary_location: { landing_page_url: "https://example.org/llm-interpretability", source: { display_name: "Transactions on Machine Learning Research" } }, authorships: [{ author: { display_name: "Ada Researcher" } }] },
 }
 const OFFLINE_QUERY: Record<string, Array<{ work: Record<string, unknown>; score: number }>> = { "transformer interpretability": [{ work: OFFLINE_WORKS.circuits, score: 0.95 }, { work: OFFLINE_WORKS.interpretability, score: 0.82 }, { work: OFFLINE_WORKS.attention, score: 0.62 }], "attention is all you need": [{ work: OFFLINE_WORKS.attention, score: 1 }] }
 
@@ -44,7 +44,8 @@ export async function searchOpenAlex(input: ProviderSearchInput): Promise<PaperC
   const query = normalizeText(input.query); if (!query) return []
   const doi = normalizeDoi(query)
   if (input.offline) {
-    const matches = doi ? [{ work: OFFLINE_WORKS.attention, score: 1 }] : (OFFLINE_QUERY[query.toLowerCase()] ?? [])
+    const exact = Object.values(OFFLINE_WORKS).find((work) => (doi && normalizeDoi(work.doi) === doi) || normalizeExternalId("openalex", work.id) === query || normalizeTitle(work.display_name) === normalizeTitle(query))
+    const matches = exact ? [{ work: exact, score: 1 }] : (OFFLINE_QUERY[query.toLowerCase()] ?? [])
     return matches.slice(0, input.limit).map(({ work, score }) => mapWork(work, query, score)).filter((item): item is PaperCandidate => Boolean(item))
   }
   const payload = record(await requestJson(doi ? workUrl(doi) : buildOpenAlexSearchUrl(input), input.runtime, "openalex"))

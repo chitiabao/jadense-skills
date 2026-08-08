@@ -106,6 +106,12 @@ export type ProviderAdapter = {
   references?: (input: ProviderDetailInput) => Promise<PaperReference[] | null>
 }
 
+export type EnrichmentConfig = {
+  abstract?: boolean
+  topN?: number
+  providers?: SearchProviderId[]
+}
+
 export type SearchRequest = {
   queries: string[]
   providers?: SearchProviderId[]
@@ -131,6 +137,7 @@ export type SearchQueryPlan = {
   totalHitCount: number
   dateRejectedCandidateCount: number
   mergedCandidateCount: number
+  enrichedCount: number
   queryStatuses: QueryStatus[]
 }
 

@@ -1,9 +1,10 @@
+import { enrichResults, normalizeEnrichConfig } from "./enrichment.js"
 import { MissingCredentialError, safeErrorMessage } from "./errors.js"
 import { inferProviders, isCandidateWithinDateRange, normalizeLimit, normalizeQueries, rankCandidates, validateDateRange } from "./planning.js"
 import { getProvider, providers } from "./providers/index.js"
-import type { PaperCandidate, PersistenceAdapter, ProviderAdapter, QueryStatus, SearchDiagnostic, SearchRequest, SearchResponse, SearchRuntimeConfig, SearchProviderId } from "./types.js"
+import type { EnrichmentConfig, PaperCandidate, PersistenceAdapter, ProviderAdapter, QueryStatus, SearchDiagnostic, SearchRequest, SearchResponse, SearchRuntimeConfig, SearchProviderId } from "./types.js"
 
-export type SearchOptions = { runtime: SearchRuntimeConfig; offline?: boolean; persistence?: PersistenceAdapter; adapters?: Partial<Record<SearchProviderId, ProviderAdapter>> }
+export type SearchOptions = { runtime: SearchRuntimeConfig; offline?: boolean; persistence?: PersistenceAdapter; adapters?: Partial<Record<SearchProviderId, ProviderAdapter>>; enrich?: boolean | EnrichmentConfig }
 
 function validateCandidate(candidate: PaperCandidate): PaperCandidate {
   if (!candidate.title || !candidate.retrievalProvider || !candidate.externalSource) throw new Error("Provider returned an invalid paper candidate.")
@@ -41,8 +42,17 @@ export async function executeSearch(request: SearchRequest, options: SearchOptio
   })
 
   const results = rankCandidates(candidates)
-  if (options.persistence) await options.persistence.save(results)
-  return { results, queryPlan: { queries, providers: selectedProviders, limit, dateRange: dateRange ?? null, offline: Boolean(options.offline), totalHitCount: candidates.length + dateRejected.length, dateRejectedCandidateCount: dateRejected.length, mergedCandidateCount: results.length, queryStatuses }, diagnostics }
+  const enrichConfig = normalizeEnrichConfig(options.enrich, results.length)
+  let finalResults = results
+  let enrichedCount = 0
+  if (enrichConfig) {
+    const out = await enrichResults(results, enrichConfig, { runtime: options.runtime, offline: options.offline, adapters: options.adapters })
+    finalResults = out.results
+    enrichedCount = out.enrichedCount
+    diagnostics.push(...out.diagnostics)
+  }
+  if (options.persistence) await options.persistence.save(finalResults)
+  return { results: finalResults, queryPlan: { queries, providers: selectedProviders, limit, dateRange: dateRange ?? null, offline: Boolean(options.offline), totalHitCount: candidates.length + dateRejected.length, dateRejectedCandidateCount: dateRejected.length, mergedCandidateCount: results.length, enrichedCount, queryStatuses }, diagnostics }
 }
 
 export { providers }

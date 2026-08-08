@@ -3,13 +3,13 @@ import { MissingCredentialError, ScholarSearchError } from "../errors.js"
 import { SEARCH_PROVIDER_IDS, type DateRange, type SearchProviderId, type SearchRequest } from "../types.js"
 import { fileURLToPath } from "node:url"
 
-type CliOptions = SearchRequest & { offline: boolean; format: "json" | "markdown"; userAgent: string; contactEmail?: string }
+type CliOptions = SearchRequest & { offline: boolean; enrich: boolean; format: "json" | "markdown"; userAgent: string; contactEmail?: string }
 function valueFor(argv: string[], index: number, flag: string): string { const value = argv[index + 1]; if (!value || value.startsWith("-")) throw new Error(`${flag} requires a value.`); return value }
 function splitValues(value: string) { return value.split(",").map((item) => item.trim()).filter(Boolean) }
 function provider(value: string): SearchProviderId { if (!(SEARCH_PROVIDER_IDS as readonly string[]).includes(value)) throw new Error(`Invalid provider: ${value}. Expected one of ${SEARCH_PROVIDER_IDS.join(", ")}.`); return value as SearchProviderId }
 
 function parseArgs(argv: string[]): CliOptions {
-  const queries: string[] = []; const selected: SearchProviderId[] = []; let limit: number | undefined; let from: string | undefined; let to: string | undefined; let offline = false; let format: CliOptions["format"] = "json"; let userAgent = process.env.SCHOLAR_SEARCH_USER_AGENT?.trim() || "scholar-search-cli/0.1.0"; let contactEmail = process.env.SCHOLAR_SEARCH_CONTACT_EMAIL?.trim() || process.env.CONTACT_EMAIL?.trim() || undefined
+  const queries: string[] = []; const selected: SearchProviderId[] = []; let limit: number | undefined; let from: string | undefined; let to: string | undefined; let offline = false; let enrich = false; let format: CliOptions["format"] = "json"; let userAgent = process.env.SCHOLAR_SEARCH_USER_AGENT?.trim() || "scholar-search-cli/0.1.0"; let contactEmail = process.env.SCHOLAR_SEARCH_CONTACT_EMAIL?.trim() || process.env.CONTACT_EMAIL?.trim() || undefined
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index]; if (arg === "--help" || arg === "-h") { printHelp(); process.exit(0) }
     const [flag, inline] = arg.split("=", 2); const read = () => inline ?? valueFor(argv, index++, flag)
@@ -22,10 +22,11 @@ function parseArgs(argv: string[]): CliOptions {
     else if (flag === "--user-agent") userAgent = read()
     else if (flag === "--contact-email") contactEmail = read()
     else if (flag === "--offline") offline = true
+    else if (flag === "--enrich") enrich = true
     else throw new Error(`Unknown argument: ${arg}`)
   }
   const dateRange: DateRange | undefined = from || to ? { from: from ?? "", to: to ?? "" } : undefined
-  return { queries, providers: selected.length ? [...new Set(selected)] : undefined, limit, dateRange, offline, format, userAgent, contactEmail }
+  return { queries, providers: selected.length ? [...new Set(selected)] : undefined, limit, dateRange, offline, enrich, format, userAgent, contactEmail }
 }
 
 function markdown(response: Awaited<ReturnType<typeof executeSearch>>): string {
@@ -34,12 +35,17 @@ function markdown(response: Awaited<ReturnType<typeof executeSearch>>): string {
   if (response.diagnostics.length) { lines.push("## Diagnostics", ""); response.diagnostics.forEach((item) => lines.push(`- [${item.severity}] ${item.provider ?? item.stage}: ${item.message}`)) }
   return `${lines.join("\n")}\n`
 }
-function printHelp() { process.stdout.write(`jadense-scholar-search\n\nUsage:\n  node dist/bin/scholar-search.mjs --query <text> [options]\n\nOptions:\n  -q, --query <text>       Query; repeat up to four times\n  -p, --provider <id>      Provider; repeat or comma-separate\n      --limit <1..30>      Retrieval limit\n      --from <YYYY-MM-DD>  Inclusive publication date\n      --to <YYYY-MM-DD>    Inclusive publication date\n      --format <json|markdown>\n      --offline             Use fixtures and never call a provider\n      --user-agent <text>  Injected HTTP User-Agent\n      --contact-email <email>  Provider contact metadata\n`) }
+function printHelp() { process.stdout.write(`jadense-scholar-search\n\nUsage:\n  node dist/bin/scholar-search.mjs --query <text> [options]\n\nOptions:\n  -q, --query <text>       Query; repeat up to four times\n  -p, --provider <id>      Provider; repeat or comma-separate\n      --limit <1..30>      Retrieval limit\n      --from <YYYY-MM-DD>  Inclusive publication date\n      --to <YYYY-MM-DD>    Inclusive publication date\n      --format <json|markdown>
+      --offline             Use fixtures and never call a provider
+      --enrich              Complete missing abstracts via OpenAlex after ranking
+      --user-agent <text>  Injected HTTP User-Agent
+      --contact-email <email>  Provider contact metadata
+`) }
 
 export async function runCli(argv = process.argv.slice(2)): Promise<number> {
   try {
     const options = parseArgs(argv)
-    const response = await executeSearch({ queries: options.queries, providers: options.providers, limit: options.limit, dateRange: options.dateRange }, { offline: options.offline, runtime: { userAgent: options.userAgent, contactEmail: options.contactEmail, credentials: { serpApiKey: process.env.SERPAPI_API_KEY?.trim() || undefined, semanticScholarApiKey: process.env.SEMANTIC_SCHOLAR_API_KEY?.trim() || undefined, ncbiApiKey: process.env.NCBI_API_KEY?.trim() || undefined, ncbiTool: process.env.NCBI_TOOL?.trim() || undefined } } })
+    const response = await executeSearch({ queries: options.queries, providers: options.providers, limit: options.limit, dateRange: options.dateRange }, { offline: options.offline, enrich: options.enrich ? { abstract: true, providers: ["openalex"] } : undefined, runtime: { userAgent: options.userAgent, contactEmail: options.contactEmail, credentials: { serpApiKey: process.env.SERPAPI_API_KEY?.trim() || undefined, semanticScholarApiKey: process.env.SEMANTIC_SCHOLAR_API_KEY?.trim() || undefined, ncbiApiKey: process.env.NCBI_API_KEY?.trim() || undefined, ncbiTool: process.env.NCBI_TOOL?.trim() || undefined } } })
     process.stdout.write(options.format === "markdown" ? markdown(response) : `${JSON.stringify(response, null, 2)}\n`); return 0
   } catch (error) {
     const code = error instanceof ScholarSearchError ? error.code : "invalid_request"; const message = error instanceof Error ? error.message : "Search failed."; const payload = { error: { code, message, ...(error instanceof ScholarSearchError && error.provider ? { provider: error.provider } : {}) } }; process.stderr.write(`${JSON.stringify(payload)}\n`); return error instanceof MissingCredentialError ? 2 : 1

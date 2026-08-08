@@ -12,3 +12,12 @@ dist/
 
 # 压缩包
 *.zip
+
+# IDE 与工具配置
+.trae/
+.workbuddy/
+
+# 示例 HTML 文件
+*.html
+
+social-card-scholar-search
