@@ -21,3 +21,5 @@ dist/
 *.html
 
 social-card-scholar-search
+
+.zcode
