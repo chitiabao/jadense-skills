@@ -1,0 +1,44 @@
+{
+  "name": "jadense-scholar-search",
+  "version": "0.1.0",
+  "description": "Provider-neutral scholarly literature search core and standalone CLI.",
+  "type": "module",
+  "license": "MIT",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "jadense-scholar-search": "dist/bin/scholar-search.mjs"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./types": "./dist/types.js",
+    "./providers": "./dist/providers/index.js"
+  },
+  "files": [
+    "dist",
+    "SKILL.md",
+    "README.md",
+    "SECURITY.md",
+    "LICENSE",
+    "integrations"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run build && npm test",
+    "cli": "node dist/bin/scholar-search.mjs"
+  },
+  "dependencies": {
+    "@xmldom/xmldom": "^0.9.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

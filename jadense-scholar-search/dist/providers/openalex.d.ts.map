@@ -1,0 +1,1 @@
+{"version":3,"file":"openalex.d.ts","sourceRoot":"","sources":["../../src/providers/openalex.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,cAAc,EAAkB,eAAe,EAAE,mBAAmB,EAAE,MAAM,aAAa,CAAA;AAkCvG,wBAAgB,sBAAsB,CAAC,KAAK,EAAE,mBAAmB,GAAG,MAAM,CAKzE;AAED,wBAAsB,cAAc,CAAC,KAAK,EAAE,mBAAmB,GAAG,OAAO,CAAC,cAAc,EAAE,CAAC,CAU1F;AAED,eAAO,MAAM,gBAAgB,EAAE,eAW9B,CAAA"}
