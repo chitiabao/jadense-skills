@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="page_title">Jadense 学术 PPT Master · 确认设计方案</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="app">
+        <aside id="preview-panel" aria-label="设计预览">
+            <div class="brand-block">
+                <div class="brand-mark">PM</div>
+                <div>
+                    <div class="panel-kicker">Jadense 学术 PPT Master</div>
+                    <div class="panel-title" data-i18n="page_title">Jadense 学术 PPT Master · 确认设计方案</div>
+                </div>
+            </div>
+            <div id="topbar-preview"></div>
+        </aside>
+
+        <section id="control-panel">
+            <header id="topbar">
+                <div id="topbar-inner">
+                    <div class="topbar-titles">
+                        <h1 data-i18n="page_title">Jadense 学术 PPT Master · 确认设计方案</h1>
+                        <p id="topbar-hint" data-i18n="topbar_hint">回答开放问题，或选择并调整推荐项，然后继续。</p>
+                    </div>
+                    <div class="lang-select">
+                        <button id="btn-lang-toggle" class="lang-select-btn" type="button" title="切换语言" aria-haspopup="listbox" aria-expanded="false"><span id="lang-current"></span><span class="lang-caret" aria-hidden="true">▾</span></button>
+                        <ul id="lang-menu" class="lang-menu" role="listbox" hidden>
+                            <li role="option" tabindex="0" aria-selected="false" data-lang="zh">中文</li>
+                            <li role="option" tabindex="0" aria-selected="false" data-lang="zh-TW">繁體中文</li>
+                            <li role="option" tabindex="0" aria-selected="false" data-lang="en">English</li>
+                            <li role="option" tabindex="0" aria-selected="false" data-lang="ja">日本語</li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+
+            <main id="form">
+                <div id="loading" data-i18n="loading">加载中…</div>
+                <div id="error" style="display:none;"></div>
+                <div id="sections" style="display:none;"></div>
+            </main>
+            <footer id="actionbar" style="display:none;">
+                <span id="confirm-status"></span>
+                <button id="btn-confirm" data-i18n="btn_confirm">确认</button>
+            </footer>
+        </section>
+    </div>
+
+    <div id="confirmed-overlay" style="display:none;">
+        <div class="cf-card">
+            <div class="cf-title">✓ 已确认</div>
+            <div class="cf-hint">选择已保存，可以关闭此页面。</div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>

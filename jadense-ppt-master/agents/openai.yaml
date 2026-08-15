@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jadense 学术 PPT Master"
+  short_description: "生成中国高校开题、答辩与学术报告用的正式可编辑 PPTX"
+  default_prompt: "使用 $jadense-ppt-master 制作一份适合中国高校开题、答辩或学术报告的正式可编辑 PPTX。"

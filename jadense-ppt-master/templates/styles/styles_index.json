@@ -1,0 +1,122 @@
+{
+  "academic-research": {
+    "summary": "面向中国高校开题、中期、答辩、学术会议、组会与基金评审的正式、可核验学术报告方法。",
+    "keywords": [
+      "学术PPT",
+      "开题",
+      "答辩",
+      "学术会议",
+      "academic-research"
+    ]
+  },
+  "consulting-decision": {
+    "summary": "仅在用户明确要求咨询或决策文档时选择：结论先行、证据驱动的分析方法。",
+    "keywords": [
+      "consulting",
+      "decision-support",
+      "answer-first",
+      "evidence",
+      "analytical"
+    ]
+  },
+  "creative-pitch": {
+    "summary": "仅在用户明确要求创意提案时选择：以真实洞察支撑创意概念及其应用。",
+    "keywords": [
+      "creative",
+      "advertising",
+      "branding",
+      "campaign",
+      "concept"
+    ]
+  },
+  "incident-postmortem": {
+    "summary": "仅在用户明确要求事故复盘时选择：重建时间线、区分因素与责任并形成可验证行动。",
+    "keywords": [
+      "postmortem",
+      "incident",
+      "reliability",
+      "root-cause",
+      "blameless"
+    ]
+  },
+  "investor-pitch": {
+    "summary": "仅在用户明确要求融资路演时选择：用证据回答时机、团队与增长逻辑。",
+    "keywords": [
+      "fundraising",
+      "pitch",
+      "startup",
+      "traction",
+      "investor"
+    ]
+  },
+  "narrative-keynote": {
+    "summary": "仅在用户明确要求叙事演讲时选择：通过张力、转折与具体细节推进观点。",
+    "keywords": [
+      "keynote",
+      "storytelling",
+      "narrative",
+      "persuasion",
+      "talk"
+    ]
+  },
+  "operating-review": {
+    "summary": "仅在用户明确要求经营复盘时选择：区分结果、偏差、原因与责任承诺。",
+    "keywords": [
+      "business-review",
+      "metrics",
+      "variance",
+      "operations",
+      "accountability"
+    ]
+  },
+  "product-launch": {
+    "summary": "仅在用户明确要求产品发布时选择：先证明价值，再命名能力。",
+    "keywords": [
+      "product",
+      "launch",
+      "positioning",
+      "demo",
+      "capability"
+    ]
+  },
+  "science-explainer": {
+    "summary": "仅在用户明确要求公众科普时选择：用可理解的类比建立认识，同时保持准确性。",
+    "keywords": [
+      "explainer",
+      "science-communication",
+      "popular",
+      "analogy",
+      "public"
+    ]
+  },
+  "solution-proposal": {
+    "summary": "仅在用户明确要求客户方案时选择：先证明理解，再给出具体且可核算的计划。",
+    "keywords": [
+      "proposal",
+      "presales",
+      "bid",
+      "client",
+      "engagement"
+    ]
+  },
+  "technical-deepdive": {
+    "summary": "仅在用户明确要求工程技术深潜时选择：从机制、约束、权衡与可观察行为解释系统。",
+    "keywords": [
+      "technical",
+      "architecture",
+      "engineering",
+      "mechanism",
+      "trade-off"
+    ]
+  },
+  "workshop-teaching": {
+    "summary": "仅在用户明确要求工作坊教学时选择：目标、示范、练习与理解检查的做中学方法。",
+    "keywords": [
+      "training",
+      "workshop",
+      "teaching",
+      "practice",
+      "onboarding"
+    ]
+  }
+}

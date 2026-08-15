@@ -23,3 +23,7 @@ dist/
 social-card-scholar-search
 
 .zcode
+
+# Python 缓存（Skill 校验与提示审计会按需生成）
+__pycache__/
+*.py[cod]
